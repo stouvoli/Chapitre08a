@@ -1,23 +1,29 @@
 package bookstoread;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.time.Year;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BookShelf {
-    private final List<String> books = new ArrayList<>();
+    private final List<Book> books = new ArrayList<>();
 
-    public List<String> books() {
+    public List<Book> books() {
         return Collections.unmodifiableList(books);
     }
 
-    public void add(String... booksToAdd) {
-        books.addAll(Arrays.asList(booksToAdd));
+    public void add(Book... booksToAdd) {
+        Arrays.stream(booksToAdd).forEach(books::add);
     }
 
-    public List<String> arrange() {
+    public List<Book> arrange() {
         return books.stream().sorted().collect(Collectors.toList());
+    }
+
+    public List<Book> arrange(Comparator<Book> criteria) {
+        return books.stream().sorted(criteria).collect(Collectors.toList());
+    }
+
+    public Map<Year, List<Book>> groupByPublicationYear() {
+        return  books.stream().collect(Collectors.groupingBy(book -> Year.of(book.getPublishedOn().getYear())));
     }
 }
